@@ -661,6 +661,25 @@ Entity matching  Separate pipeline step     Can use qualified
 The comparison shows that the core challenge remains similar: discovering the identifier is harder than validating a candidate that is already known.
 
 The exact discovery strategy, verification service and legal constraints would need to be adapted for each country.
+### VAT Checksum and Brute-Force Enumeration
+
+UK VAT numbers have a constrained format and include checksum rules, which means that only a subset of nine-digit combinations can be valid.
+
+A theoretical approach would be to generate valid VAT candidates and submit them to the HMRC verification service until a company of interest is found.
+
+I would not use this as the primary discovery strategy.
+
+The approach has several problems:
+
+- the search space is still extremely large;
+- verification requests would need to be made for many candidates;
+- rate limits and service restrictions make large-scale enumeration impractical;
+- a successful verification only identifies the entity associated with a VAT number and does not provide a direct company-to-VAT mapping;
+- systematic enumeration would raise technical and potentially legal/terms-of-use concerns.
+
+The checksum is therefore useful as a validation and candidate-filtering mechanism, but not as a practical discovery mechanism.
+
+The preferred approach is to discover VAT candidates from public sources and use HMRC for verification rather than enumeration.
 
 14. Final Approach
 
