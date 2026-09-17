@@ -191,9 +191,9 @@ The extraction step only produces candidates. It does not determine whether the 
 
 ### 5.1 VAT Verification
 
-A discovered VAT number is not accepted directly into the final dataset.
+For the proof of concept, VAT candidates were checked against an authoritative VAT verification source. The HMRC verification result for the discovered Abridge candidate was recorded in the POC results.
 
-The candidate must first be checked against an authoritative VAT verification source.
+The current codebase does not implement a live HMRC API integration. Instead, `vat_verifier.py` focuses on normalizing the target and verified company information and performing entity-level matching.
 
 The verification step answers:
 
@@ -269,7 +269,6 @@ NOT_FOUND — no sufficiently reliable VAT candidate was discovered in the searc
 CONFIRMED — a VAT candidate was verified and successfully matched to the target company.
 INVALID — a discovered VAT candidate failed official verification.
 
-The current POC results are:
 The current POC results are:
 
 | Company Number | Company Name | VAT Candidate | HMRC Verified | Entity Match | Final Status |
@@ -702,7 +701,6 @@ This approach prioritizes data integrity and minimizes the risk of silently intr
 vat-identifier-discovery/
 │
 ├── data/
-│   ├── sample_89_companies.csv
 │   ├── search_queries.csv
 │   └── discovery_results.csv
 │
@@ -726,6 +724,7 @@ vat-identifier-discovery/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+The 89-company development sample is kept locally and excluded from version control because it was extracted from the large Companies House bulk dataset.
 Main Components
 
 data_loader.py
@@ -763,8 +762,34 @@ Calculates summary statistics from the POC results.
 
 create_poc_results.py
 Creates the documented POC result dataset used for evaluation.
+## 16. Reproducibility
 
-16. Key Takeaways
+The proof of concept can be reproduced locally with Python 3.
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+
+Profile the Companies House sample:
+
+python src/data_profile.py
+
+Generate discovery queries:
+
+python src/search_queries.py
+
+Inspect the generated queries:
+
+python src/discovery_runner.py
+
+Review the POC summary:
+
+python src/poc_summary.py
+
+The development sample is not included in the repository because the original Companies House bulk dataset is large. The committed data/ files contain the generated search queries and documented POC results.
+
+17. Key Takeaways
 
 The main findings from the proof of concept are:
 
