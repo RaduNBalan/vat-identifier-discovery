@@ -1,0 +1,8 @@
+CompanyNumber,CompanyName,SourceURL,SourceType,VATCandidate,HMRCVerified,HMRCName,HMRCAddress,EntityMatch,FinalStatus,Notes
+16092999,!ABRIDGE TAX LTD,https://vat-lookup.co.uk/verify/vat_check.php/VATNumber/GB992082694,third_party,GB992082694,TRUE,ABRIDGE LTD,418 STAINES ROAD; BEDFONT; MIDDLESEX; TW14 8BT; GB,FALSE,FALSE_POSITIVE,"VAT candidate was discovered on a third-party source and verified as valid by HMRC, but the HMRC registered business does not match the target Companies House entity."
+14983527,"""4RENT ESTATES"" LTD",,,,FALSE,,,,NOT_FOUND,No VAT candidate discovered in the searched public web sources.
+15761044,"""A TASTE OF TUSCANY"" LTD",,,,FALSE,,,,NOT_FOUND,No VAT candidate explicitly attributable to company 15761044 was discovered in the searched public sources.
+04494986,"""A"" CERAMICS LIMITED",,,,FALSE,,,,NOT_FOUND,No VAT candidate explicitly attributable to company 04494986 was discovered in the searched public sources.
+17330181,"""BACKS"" LTD",,,,FALSE,,,,NOT_FOUND,No VAT candidate explicitly attributable to company 17330181 was discovered in the searched public sources.
+02871100,BEDE INVESTMENT PROPERTIES LIMITED,,,,FALSE,,,,NOT_FOUND,No VAT candidate explicitly attributable to company 02871100 was discovered in the searched public sources.
+04427981,"""BELLE-VUE"" ENTERPRISES LIMITED",,,,FALSE,,,,NOT_FOUND,No VAT candidate explicitly attributable to company 04427981 was discovered in the searched public sources.
