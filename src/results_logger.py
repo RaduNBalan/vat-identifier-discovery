@@ -1,3 +1,4 @@
+
 import csv
 import os
 
@@ -5,9 +6,12 @@ import os
 FIELDNAMES = [
     "CompanyNumber",
     "CompanyName",
+    "Query",
     "SourceURL",
+    "FinalURL",
     "SourceType",
     "VATCandidate",
+    "ChecksumValid",
     "HMRCVerified",
     "HMRCName",
     "HMRCAddress",
@@ -17,37 +21,28 @@ FIELDNAMES = [
 ]
 
 
-def save_result(result, output_path="data/discovery_results.csv"):
+def save_result(result, output_path="data/discovery_results_live.csv"):
+    directory = os.path.dirname(output_path)
+
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+
     file_exists = os.path.exists(output_path)
+    write_header = not file_exists or os.path.getsize(output_path) == 0
 
-    with open(output_path, "a", newline="", encoding="utf-8") as file:
+    with open(output_path, "a", newline="", encoding="utf-8-sig") as file:
         writer = csv.DictWriter(file, fieldnames=FIELDNAMES)
-
-        if not file_exists:
+        if write_header:
             writer.writeheader()
 
-        writer.writerow(result)
+        writer.writerow({
+            field: result.get(field, "")
+            for field in FIELDNAMES
+        })
 
 
 if __name__ == "__main__":
-    result = {
-        "CompanyNumber": "16092999",
-        "CompanyName": "!ABRIDGE TAX LTD",
-        "SourceURL": "https://vat-lookup.co.uk/verify/vat_check.php/VATNumber/GB992082694",
-        "SourceType": "third_party",
-        "VATCandidate": "GB992082694",
-        "HMRCVerified": "TRUE",
-        "HMRCName": "ABRIDGE LTD",
-        "HMRCAddress": "418 STAINES ROAD; BEDFONT; MIDDLESEX; TW14 8BT; GB",
-        "EntityMatch": "FALSE",
-        "FinalStatus": "FALSE_POSITIVE",
-        "Notes": (
-            "VAT candidate was discovered on a third-party source "
-            "and verified as valid by HMRC, but the HMRC registered "
-            "business does not match the target Companies House entity."
-        ),
-    }
-
-    save_result(result)
-
-    print("Rezultatul a fost salvat.")
+    print(
+        "Logger pregătit. Rezultatele noi vor fi salvate în "
+        "data/discovery_results_live.csv."
+    )
