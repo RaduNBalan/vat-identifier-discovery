@@ -1,56 +1,73 @@
-import csv
+from collections import Counter
+
+from data_loader import load_companies
 
 
-def load_companies(file_path):
-    companies = []
+DATA_PATH = "data/sample_89_companies.csv"
 
-    with open(file_path, "r", encoding="utf-8-sig", newline="") as file:
-        reader = csv.DictReader(file)
-
-        for row in reader:
-            companies.append(row)
-
-    return companies
+PROFILE_FIELDS = [
+    "CompanyName",
+    "CompanyNumber",
+    "CompanyStatus",
+    "CountryOfOrigin",
+    "IncorporationDate",
+    "CompanyCategory",
+    "RegAddress.AddressLine1",
+    "RegAddress.PostTown",
+    "RegAddress.County",
+    "RegAddress.Country",
+    "RegAddress.PostCode",
+    "SICCode.SicText_1",
+]
 
 
 def profile_companies(companies):
-    print(f"Număr total de companii: {len(companies)}")
+    """Return basic data-quality metrics for company records."""
+    missing_by_field = {}
 
-    print("\nColoane disponibile:")
+    for field in PROFILE_FIELDS:
+        missing_by_field[field] = sum(
+            not (company.get(field) or "").strip()
+            for company in companies
+        )
 
-    if companies:
-        for column in companies[0].keys():
-            print(f"- {column}")
+    statuses = Counter(
+        (company.get("CompanyStatus") or "").strip()
+        for company in companies
+    )
 
-    print("\nStatutul companiilor:")
+    company_numbers = [
+        (company.get("CompanyNumber") or "").strip()
+        for company in companies
+    ]
 
-    statuses = {}
+    duplicate_numbers = len(company_numbers) - len(set(company_numbers))
 
-    for company in companies:
-        status = company["CompanyStatus"]
+    return {
+        "total": len(companies),
+        "statuses": statuses,
+        "missing_by_field": missing_by_field,
+        "duplicate_company_numbers": duplicate_numbers,
+    }
 
-        if status not in statuses:
-            statuses[status] = 0
 
-        statuses[status] += 1
+def main():
+    companies = load_companies(DATA_PATH)
+    profile = profile_companies(companies)
 
-    for status, count in statuses.items():
-        print(f"- {status}: {count}")
+    print("\nDATA PROFILE")
+    print("=" * 40)
+    print(f"Total companies: {profile['total']}")
+    print(f"Duplicate company numbers: {profile['duplicate_company_numbers']}")
 
-    print("\nValori lipsă:")
+    print("\nCompany status:")
+    for status, count in profile["statuses"].most_common():
+        print(f"- {status or '[missing]'}: {count}")
 
-    for column in companies[0].keys():
-        missing = 0
+    print("\nMissing values by field:")
+    for field, count in profile["missing_by_field"].items():
+        print(f"- {field}: {count}")
 
-        for company in companies:
-            value = company[column]
-
-            if value is None or value.strip() == "":
-                missing += 1
-
-        print(f"- {column}: {missing} valori lipsă")
 
 if __name__ == "__main__":
-    companies = load_companies("data/sample_89_companies.csv")
-
-    profile_companies(companies)
+    main()

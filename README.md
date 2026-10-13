@@ -823,3 +823,77 @@ NOT_FOUND must not be interpreted as proof that a company is not VAT registered.
 Entity matching is essential for preventing false-positive VAT assignments.
 Scaling requires a source cascade, candidate deduplication, selective verification and monitoring.
 A production system should maintain provenance and periodically revalidate existing records.
+
+ Current Status and Findings
+
+ Objective
+
+This proof of concept evaluates whether UK company VAT registration numbers can be discovered from public web sources and reliably attributed to Companies House entities.
+
+The workflow separates discovery, official verification, and entity attribution. A VAT number is not accepted solely because it has a valid format or passes verification.
+
+ Automated Pipeline Results
+
+The latest limited test processed 10 search queries and examined 20 web results.
+
+| Metric | Observed result |
+|---|---:|
+| Search queries processed | 10 |
+| Web results examined | 20 |
+| VAT candidates saved | 0 |
+| HMRC verification requests | 0 |
+| Errors or skipped items | 1 |
+
+The automated pipeline did not discover a VAT candidate during this test. It therefore has not yet demonstrated successful end-to-end VAT discovery and verification.
+
+Search-result relevance was inconsistent, and some pages were inaccessible or unsupported by the current HTML-only extractor.
+
+These results describe a limited technical test, not expected performance across the UK company population.
+
+ Manual Research Findings
+
+A separate manual investigation covered seven companies.
+
+| Metric | Observed result |
+|---|---:|
+| Companies investigated | 7 |
+| VAT candidates identified | 1 |
+| Candidates verified | 1 |
+| Confirmed entity matches | 0 |
+| False-positive attributions | 1 |
+| Cases with no sufficiently reliable candidate | 6 |
+
+The candidate GB992082694, investigated in connection with !ABRIDGE TAX LTD, was associated with ABRIDGE LTD by the verification information. It was rejected for entity attribution.
+
+The observed false-positive proportion among discovered candidates was 1/1. This is a description of a single candidate, not a statistically reliable estimate of production performance.
+
+### Interpretation of Missing Results
+
+`NOT_FOUND` means that the discovery process did not identify a sufficiently reliable candidate using the sources and queries investigated.
+
+It does not prove that a company is not VAT registered. The result may reflect missing public information, unsuccessful queries, inaccessible pages, extraction limitations, or an actual absence of VAT registration.
+
+ Current Limitations
+
+- The automated pipeline has not demonstrated successful end-to-end discovery.
+- Search-result relevance is inconsistent.
+- The current page extractor supports HTML and XHTML, not PDF documents.
+- The sample is too small to estimate UK-wide coverage.
+- Manual research results and automated pipeline results are separate and must not be combined as one evaluation.
+- Production precision, recall, coverage, and cost per confirmed VAT identifier have not been established.
+
+ Recommended Next Steps
+
+1. Evaluate additional public and licensed discovery sources.
+2. Measure candidate yield and relevance by source.
+3. Improve extraction only where a source demonstrates sufficient value.
+4. Verify candidates using an authoritative service.
+5. Require entity-level evidence before accepting a VAT-to-company relationship.
+6. Build a larger, reproducibly sampled evaluation set with independently reviewed outcomes.
+7. Measure precision, coverage, false-positive attribution, processing cost, and source reliability.
+
+Conclusion
+
+The manual investigation demonstrates why VAT verification and entity attribution must be separate. A valid VAT number can still belong to the wrong company.
+
+However, the automated discovery pipeline has not yet demonstrated useful end-to-end results. The feasibility of building a sufficiently complete and reliable UK company VAT dataset from public web sources remains unproven and requires further source evaluation and validation.
